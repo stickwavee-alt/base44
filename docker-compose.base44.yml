@@ -1,0 +1,105 @@
+services:
+  db:
+    image: mariadb:10.11
+    restart: on-failure
+    environment:
+      MYSQL_ROOT_PASSWORD: ofoghrootpw
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wp
+      MYSQL_PASSWORD: wppass123
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  wordpress:
+    image: wordpress:6.5-php8.2-apache
+    restart: on-failure
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3000:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wp
+      WORDPRESS_DB_PASSWORD: wppass123
+      WORDPRESS_DEBUG: 1
+      WORDPRESS_DEBUG_LOG: 1
+      BASE44_PUBLIC_HOST_SUFFIX: ${BASE44_PUBLIC_HOST_SUFFIX}
+      WORDPRESS_CONFIG_EXTRA: |
+        if (getenv('BASE44_PUBLIC_HOST_SUFFIX')) {
+          $$public_host = '3000-' . getenv('BASE44_PUBLIC_HOST_SUFFIX');
+          define('WP_HOME', 'https://' . $$public_host);
+          define('WP_SITEURL', 'https://' . $$public_host);
+          $$_SERVER['HTTP_HOST']  = $$public_host;
+          $$_SERVER['SERVER_NAME'] = $$public_host;
+          $$_SERVER['HTTPS']      = 'on';
+          $$_SERVER['SERVER_PORT'] = 443;
+        }
+    volumes:
+      # Mount the theme from source so edits are live
+      - ./ofogh:/var/www/html/wp-content/themes/ofogh
+      - wp_data:/var/www/html
+    healthcheck:
+      test: ["CMD-SHELL", "php -r '$$fp=@fsockopen(\"localhost\",80,$$e,$$s,5);exit($$fp?0:1);'"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  # One-shot: install WordPress, activate theme, create sample properties
+  wp-init:
+    image: wordpress:cli-php8.2
+    depends_on:
+      wordpress:
+        condition: service_healthy
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wp
+      WORDPRESS_DB_PASSWORD: wppass123
+    volumes:
+      - wp_data:/var/www/html
+      - ./ofogh:/var/www/html/wp-content/themes/ofogh
+      - ./seed-properties.php:/tmp/seed-properties.php:ro
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        echo "Waiting for WordPress to be ready..."
+        sleep 3
+
+        # Core install
+        wp core install \
+          --url=http://localhost:3000 \
+          --title="Ofogh Properties" \
+          --admin_user=admin \
+          --admin_password=admin \
+          --admin_email=admin@example.com \
+          --skip-email \
+          --allow-root
+
+        # Activate theme
+        wp theme activate ofogh --allow-root
+
+        # Install & activate WooCommerce (theme declares support)
+        wp plugin install woocommerce --activate --allow-root || true
+
+        # Set permalink structure for CPT archives
+        wp rewrite flush --allow-root
+
+        # Create sample property posts
+        wp --allow-root eval-file /tmp/seed-properties.php
+
+        echo "WordPress initialized successfully."
+    restart: "no"
+
+volumes:
+  db_data:
+  wp_data:
