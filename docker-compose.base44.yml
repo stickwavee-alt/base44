@@ -17,7 +17,7 @@ services:
       start_period: 20s
 
   wordpress:
-    image: wordpress:6.5-php8.2-apache
+    image: wordpress:php8.2-apache
     restart: on-failure
     depends_on:
       db:
@@ -56,6 +56,7 @@ services:
   # One-shot: install WordPress, activate theme, create sample properties
   wp-init:
     image: wordpress:cli-php8.2
+    user: root
     depends_on:
       wordpress:
         condition: service_healthy
@@ -75,7 +76,8 @@ services:
         echo "Waiting for WordPress to be ready..."
         sleep 3
 
-        # Core install
+        # Core install (idempotent — skips if already installed)
+        wp core is-installed --allow-root 2>/dev/null || \
         wp core install \
           --url=http://localhost:3000 \
           --title="Ofogh Properties" \
@@ -85,16 +87,24 @@ services:
           --skip-email \
           --allow-root
 
-        # Activate theme
-        wp theme activate ofogh --allow-root
+        # Run database upgrades if core version changed
+        wp core update-db --allow-root 2>/dev/null || true
 
-        # Install & activate WooCommerce (theme declares support)
-        wp plugin install woocommerce --activate --allow-root || true
+        # Activate theme (idempotent)
+        wp theme activate ofogh --allow-root 2>/dev/null || true
+
+        # Ensure upgrade directory exists and is writable
+        mkdir -p /var/www/html/wp-content/upgrade
+        chmod 777 /var/www/html/wp-content/upgrade
+
+        # Install & activate WooCommerce (optional — theme works without it)
+        wp plugin install woocommerce --activate --allow-root 2>&1 || \
+          echo "Note: WooCommerce not installed (optional)."
 
         # Set permalink structure for CPT archives
         wp rewrite flush --allow-root
 
-        # Create sample property posts
+        # Create sample property posts (idempotent — checks existing posts)
         wp --allow-root eval-file /tmp/seed-properties.php
 
         echo "WordPress initialized successfully."

@@ -38,22 +38,22 @@ get_template_part( 'template-parts/page', 'hero', array(
                             <input type="hidden" name="kind" value="contact">
                             <div class="contact-row">
                                 <div>
-                                    <label class="contact-label"><?php esc_html_e( 'نام و نام خانوادگی', 'ofogh' ); ?></label>
-                                    <input type="text" name="name" class="field-input" placeholder="<?php esc_attr_e( 'نگار تهرانی', 'ofogh' ); ?>" autocomplete="name">
+                                    <label class="contact-label" for="contact-name"><?php esc_html_e( 'نام و نام خانوادگی', 'ofogh' ); ?></label>
+                                    <input type="text" id="contact-name" name="name" class="field-input" placeholder="<?php esc_attr_e( 'نگار تهرانی', 'ofogh' ); ?>" autocomplete="name" required>
                                 </div>
                                 <div>
-                                    <label class="contact-label"><?php esc_html_e( 'ایمیل', 'ofogh' ); ?></label>
-                                    <input type="email" name="email" class="field-input" placeholder="name@example.com" autocomplete="email" dir="ltr">
+                                    <label class="contact-label" for="contact-email"><?php esc_html_e( 'ایمیل', 'ofogh' ); ?></label>
+                                    <input type="email" id="contact-email" name="email" class="field-input" placeholder="name@example.com" autocomplete="email" dir="ltr" required>
                                 </div>
                             </div>
                             <div class="contact-row">
                                 <div>
-                                    <label class="contact-label"><?php esc_html_e( 'شمارهٔ تماس', 'ofogh' ); ?> <span style="color:rgba(91,102,114,0.6);">(<?php esc_html_e( 'اختیاری', 'ofogh' ); ?>)</span></label>
-                                    <input type="tel" name="phone" class="field-input" placeholder="۰۹۱۲۳۴۵۶۷۸۹" inputmode="tel" autocomplete="tel">
+                                    <label class="contact-label" for="contact-phone"><?php esc_html_e( 'شمارهٔ تماس', 'ofogh' ); ?> <span style="color:rgba(91,102,114,0.6);">(<?php esc_html_e( 'اختیاری', 'ofogh' ); ?>)</span></label>
+                                    <input type="tel" id="contact-phone" name="phone" class="field-input" placeholder="۰۹۱۲۳۴۵۶۷۸۹" inputmode="tel" autocomplete="tel">
                                 </div>
                                 <div>
-                                    <label class="contact-label"><?php esc_html_e( 'علاقه‌مندم به', 'ofogh' ); ?></label>
-                                    <select name="interest" class="field-input">
+                                    <label class="contact-label" for="contact-interest"><?php esc_html_e( 'علاقه‌مندم به', 'ofogh' ); ?></label>
+                                    <select id="contact-interest" name="interest" class="field-input">
                                         <?php foreach ( ofogh_get_interests() as $interest ) : ?>
                                             <option value="<?php echo esc_attr( $interest ); ?>"><?php echo esc_html( $interest ); ?></option>
                                         <?php endforeach; ?>
@@ -61,8 +61,8 @@ get_template_part( 'template-parts/page', 'hero', array(
                                 </div>
                             </div>
                             <div>
-                                <label class="contact-label"><?php esc_html_e( 'پیام', 'ofogh' ); ?></label>
-                                <textarea name="message" rows="5" class="field-input field-input--area" placeholder="<?php esc_attr_e( 'دربارهٔ خانه‌ای که می‌خواهید، زمان‌بندی و بودجه‌تان بنویسید.', 'ofogh' ); ?>"></textarea>
+                                <label class="contact-label" for="contact-message"><?php esc_html_e( 'پیام', 'ofogh' ); ?></label>
+                                <textarea id="contact-message" name="message" rows="5" class="field-input field-input--area" placeholder="<?php esc_attr_e( 'دربارهٔ خانه‌ای که می‌خواهید، زمان‌بندی و بودجه‌تان بنویسید.', 'ofogh' ); ?>" required></textarea>
                             </div>
                             <p class="contact-error" data-contact-error></p>
                             <button type="submit" class="of-btn of-btn--primary of-btn--lg" style="width:100%;">

@@ -269,21 +269,21 @@ while ( have_posts() ) : the_post();
                     <input type="hidden" name="kind" value="contact">
                     <div class="contact-row">
                         <div>
-                            <label class="contact-label"><?php esc_html_e( 'نام و نام خانوادگی', 'ofogh' ); ?></label>
-                            <input type="text" name="name" class="field-input" placeholder="<?php esc_attr_e( 'نگار تهرانی', 'ofogh' ); ?>">
+                            <label class="contact-label" for="modal-name"><?php esc_html_e( 'نام و نام خانوادگی', 'ofogh' ); ?></label>
+                            <input type="text" id="modal-name" name="name" class="field-input" placeholder="<?php esc_attr_e( 'نگار تهرانی', 'ofogh' ); ?>" autocomplete="name" required>
                         </div>
                         <div>
-                            <label class="contact-label"><?php esc_html_e( 'ایمیل', 'ofogh' ); ?></label>
-                            <input type="email" name="email" class="field-input" placeholder="name@example.com" dir="ltr">
+                            <label class="contact-label" for="modal-email"><?php esc_html_e( 'ایمیل', 'ofogh' ); ?></label>
+                            <input type="email" id="modal-email" name="email" class="field-input" placeholder="name@example.com" autocomplete="email" dir="ltr" required>
                         </div>
                     </div>
                     <div>
-                        <label class="contact-label"><?php esc_html_e( 'شمارهٔ تماس', 'ofogh' ); ?> <span style="color:rgba(91,102,114,0.6);">(<?php esc_html_e( 'اختیاری', 'ofogh' ); ?>)</span></label>
-                        <input type="tel" name="phone" class="field-input" placeholder="۰۹۱۲۳۴۵۶۷۸۹">
+                        <label class="contact-label" for="modal-phone"><?php esc_html_e( 'شمارهٔ تماس', 'ofogh' ); ?> <span style="color:rgba(91,102,114,0.6);">(<?php esc_html_e( 'اختیاری', 'ofogh' ); ?>)</span></label>
+                        <input type="tel" id="modal-phone" name="phone" class="field-input" placeholder="۰۹۱۲۳۴۵۶۷۸۹" inputmode="tel" autocomplete="tel">
                     </div>
                     <div>
-                        <label class="contact-label"><?php esc_html_e( 'پیام', 'ofogh' ); ?></label>
-                        <textarea name="message" rows="4" class="field-input field-input--area" placeholder="<?php esc_attr_e( 'می‌خواهم دربارهٔ این ملک اطلاعات بیشتری بگیرم.', 'ofogh' ); ?>"></textarea>
+                        <label class="contact-label" for="modal-message"><?php esc_html_e( 'پیام', 'ofogh' ); ?></label>
+                        <textarea id="modal-message" name="message" rows="4" class="field-input field-input--area" placeholder="<?php esc_attr_e( 'می‌خواهم دربارهٔ این ملک اطلاعات بیشتری بگیرم.', 'ofogh' ); ?>" required></textarea>
                     </div>
                     <p class="contact-error" data-contact-error></p>
                     <button type="submit" class="of-btn of-btn--primary of-btn--lg" style="width:100%;">

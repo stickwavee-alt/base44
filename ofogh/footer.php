@@ -108,7 +108,7 @@ if ( ! $ofogh_skip_footer ) :
                 <form class="newsletter-form" data-ofogh-newsletter>
                     <span class="newsletter-label eyebrow"><?php esc_html_e( 'لیستینگ‌های خصوصی', 'ofogh' ); ?></span>
                     <div class="newsletter-input-row">
-                        <input type="email" class="newsletter-input" placeholder="<?php esc_attr_e( 'ایمیل شما', 'ofogh' ); ?>" aria-label="<?php esc_attr_e( 'ایمیل خبرنامه', 'ofogh' ); ?>" required>
+                        <input type="email" name="email" class="newsletter-input" placeholder="<?php esc_attr_e( 'ایمیل شما', 'ofogh' ); ?>" aria-label="<?php esc_attr_e( 'ایمیل خبرنامه', 'ofogh' ); ?>" autocomplete="email" required>
                         <button type="submit" class="newsletter-submit" aria-label="<?php esc_attr_e( 'عضویت در خبرنامه', 'ofogh' ); ?>">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
                         </button>
